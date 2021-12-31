@@ -9,16 +9,22 @@ public class PhoneApp {
 		Scanner sc = new Scanner(System.in);
 		PhoneDao phoneDao = new PhoneDao();
 		int i = 0;
+		PersonVo p;
+		int put;
+		int putNum;
+		String putName;
+		String putHp;
+		String putCompany;
 		
 		System.out.println("********************************");
 		System.out.println("*       전화번호 관리 프로그램       *");
 		System.out.println("********************************");
 		while(i==0) {
 			System.out.println("");
-			System.out.println("1.리스트 2.등록 3.삭제 4.검색 5.종료");
+			System.out.println("1.리스트 2.등록 3. 수정 4.삭제 5.검색 6.종료");
 			System.out.println("--------------------------------");
 			System.out.print(">메뉴번호:");
-			int put = sc.nextInt();
+			put = sc.nextInt();
 			
 			switch (put) {
 			case 1 :
@@ -29,33 +35,46 @@ public class PhoneApp {
 				System.out.println("<2.등록>");
 				sc.nextLine();//개행문자 제거
 				System.out.print(">이름:");
-				String putname = sc.nextLine();
+				putName = sc.nextLine();
 				System.out.print(">휴대전화:");
-				String puthp = sc.nextLine();
+				putHp = sc.nextLine();
 				System.out.print(">회사전화:");
-				String putcompany = sc.nextLine();
+				putCompany = sc.nextLine();
 				
-				PersonVo p2 = new PersonVo(putname, puthp, putcompany);
-				phoneDao.getInsert(p2);
+				p = new PersonVo(putName, putHp, putCompany);
+				phoneDao.getInsert(p);
 
 				phoneDao.getSelect();
 				
 				break;
 			case 3 :
-				System.out.println("<3.삭제>");
+				System.out.println("<3.수정>");
 				System.out.print(">번호:");
-				int	putNum = sc.nextInt();
-				phoneDao.getDelete(putNum);
-				//System.out.println("[삭제되었습니다.]");
+				putNum = sc.nextInt();
+				System.out.print(">이름:");
+				putName = sc.nextLine();
+				System.out.print(">휴대전화:");
+				putHp = sc.nextLine();
+				System.out.print(">회사전화:");
+				putCompany = sc.nextLine();
+				
+				p = new PersonVo(putNum, putName, putHp, putCompany);
+				phoneDao.getUpdate(p);
 				break;
 			case 4 :
-				System.out.println("<4.검색>");
-				sc.nextLine();//개행문자 제거
-				System.out.print(">이름:");
-				String putName = sc.nextLine();
-				phoneDao.getSearch(putName);
+				System.out.println("<4.삭제>");
+				System.out.print(">번호:");
+				putNum = sc.nextInt();
+				phoneDao.getDelete(putNum);
 				break;
 			case 5 :
+				System.out.println("<5.검색>");
+				sc.nextLine();//개행문자 제거
+				System.out.print(">이름:");
+				putName = sc.nextLine();
+				phoneDao.getSearch(putName);
+				break;
+			case 6 :
 				System.out.println("********************************");
 				System.out.println("*           감사합니다           *");
 				System.out.println("********************************");

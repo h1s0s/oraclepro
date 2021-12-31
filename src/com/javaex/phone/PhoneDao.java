@@ -100,7 +100,7 @@ public class PhoneDao {
 
 			int count = pstmt.executeUpdate();
 
-			System.out.println(count + " 건이 생성되었습니다.");
+			System.out.println("["+count + "건 생성되었습니다]");
 
 		} catch (SQLException e) {
 			System.out.println("error:" + e);
@@ -109,10 +109,36 @@ public class PhoneDao {
 	}
 
 	public void getUpdate(PersonVo personVo) {
+		getConnection();
+		try {
+			String query = "";
+			query += " update  person ";
+			query += " set     name = ?, ";
+			query += " 		   hp = ?, ";
+			query += " 		   company = ? ";
+			query += " where   person_id = ? ";
 
+			// 3.2 문자열을 쿼리문으로 만들기
+			pstmt = conn.prepareStatement(query);
+
+			// 3.3 바인딩
+			pstmt.setString(1, personVo.getName());
+			pstmt.setString(2, personVo.getHp());
+			pstmt.setString(3, personVo.getCompany());
+			pstmt.setInt(4, personVo.getPersonId());
+
+			// 3.4 실행
+			int count = pstmt.executeUpdate();
+
+			// 4.결과처리
+			System.out.println("["+count + "건 수정되었습니다]");
+
+		} catch (SQLException e) {
+			System.out.println("error:" + e);
+		}
 	}
 
-	public void getDelete(PersonVo personVo) {
+	public void getDelete(int num) {
 
 	}
 	public void getSearch(String search) {
