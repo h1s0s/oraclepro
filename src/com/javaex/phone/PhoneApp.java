@@ -103,5 +103,6 @@ public class PhoneApp {
 			}
 		}
 		sc.close();
+		
 	}
 }

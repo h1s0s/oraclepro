@@ -24,7 +24,7 @@ public class PersonVo {
 		this.company = company;
 	}
 	
-	//메소드gs
+	//메소드 gs
 	public int getPersonId() {
 		return personId;
 	}
