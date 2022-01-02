@@ -180,7 +180,7 @@ public class PhoneDao {
 			query += " or       hp like ? ";
 			query += " or       company like ? ";
 			query += " order by person_id asc ";
-			
+
 			pstmt = conn.prepareStatement(query);
 
 			pstmt.setString(1, '%' + search + '%');
