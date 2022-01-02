@@ -12,9 +12,9 @@ public class PhoneDao {
 
 	// 필드
 	private String driver = "oracle.jdbc.driver.OracleDriver";
-	private String url = "jdbc:oracle:thin:#localhost:1521:xe";
-	private String id = "webdb";
-	private String pw = "webdb";
+	private String url = "jdbc:oracle:thin:@localhost:1521:xe";
+	private String id = "phonedb";
+	private String pw = "phonedb";
 	private Connection conn = null;
 	private PreparedStatement pstmt = null;
 	private ResultSet rs = null;
@@ -54,6 +54,7 @@ public class PhoneDao {
 
 	public List<PersonVo> getSelect() {
 		List<PersonVo> pList = new ArrayList<PersonVo>();
+
 		getConnection();
 		try {
 			String query = "";
@@ -63,7 +64,7 @@ public class PhoneDao {
 			query += "         company ";
 			query += " from    person ";
 
-			int count = pstmt.executeUpdate();
+			pstmt = conn.prepareStatement(query);
 
 			rs = pstmt.executeQuery();
 
@@ -100,7 +101,7 @@ public class PhoneDao {
 
 			int count = pstmt.executeUpdate();
 
-			System.out.println("["+count + "건 생성되었습니다]");
+			System.out.println("[" + count + "건 등록되었습니다]");
 
 		} catch (SQLException e) {
 			System.out.println("error:" + e);
@@ -131,17 +132,77 @@ public class PhoneDao {
 			int count = pstmt.executeUpdate();
 
 			// 4.결과처리
-			System.out.println("["+count + "건 수정되었습니다]");
+			System.out.println("[" + count + "건 수정되었습니다]");
 
 		} catch (SQLException e) {
 			System.out.println("error:" + e);
 		}
+		close();
 	}
 
 	public void getDelete(int num) {
+		getConnection();
+		try {
+			String query = "";
+			query += " delete  from person ";
+			query += " where   person_id = ? ";
 
+			// 3.2 문자열을 쿼리문으로 만들기
+			pstmt = conn.prepareStatement(query);
+
+			// 3.3 바인딩
+			pstmt.setInt(1, num);
+
+			// 3.4 실행
+			int count = pstmt.executeUpdate();
+
+			// 4.결과처리
+			System.out.println("[" + count + "건 삭제되었습니다]");
+
+		} catch (SQLException e) {
+			System.out.println("error:" + e);
+		}
+		close();
 	}
-	public void getSearch(String search) {
-		
+
+	public List<PersonVo> getSearch(String search) {
+		List<PersonVo> pList = new ArrayList<PersonVo>();
+
+		getConnection();
+		try {
+			String query = "";
+			query += " select   person_id, ";
+			query += "          name, ";
+			query += "          hp, ";
+			query += "          company ";
+			query += " from     person ";
+			query += " where    name like ?";
+			query += " or       hp like ? ";
+			query += " or       company like ? ";
+			query += " order by person_id asc ";
+			
+			pstmt = conn.prepareStatement(query);
+
+			pstmt.setString(1, '%' + search + '%');
+			pstmt.setString(2, '%' + search + '%');
+			pstmt.setString(3, '%' + search + '%');
+
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				int pId = rs.getInt(1);
+				String pName = rs.getString(2);
+				String pHp = rs.getString(3);
+				String pCompany = rs.getString(4);
+
+				PersonVo pvo = new PersonVo(pId, pName, pHp, pCompany);
+				pList.add(pvo);
+			}
+
+		} catch (SQLException e) {
+			System.out.println("error:" + e);
+		}
+		close();
+		return pList;
 	}
 }
